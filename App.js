@@ -10,7 +10,7 @@ import {
   Button,
   TouchableHighlight,
 } from 'react-native';
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from '@react-native-community/async-storage';
 
 const App = () => {
   const [nombre, setNombre] = useState('');
@@ -25,9 +25,9 @@ const App = () => {
       await AsyncStorage.setItem('nombre', nombre);
       setNombreStorage(nombre);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const obtenerDatosStorage = async () => {
     try {
@@ -36,25 +36,36 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  const eliminarDatos = async () => {
+    try {
+      await AsyncStorage.removeItem('nombre');
+      setNombreStorage('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       <View style={styles.contenedor}>
-      <Text>Hola: {nombreStorage}</Text>
-        <TextInput 
-        placeholder="Escribe tu nombre" 
-        style={styles.input} 
-        onChangeText={text => setNombre(text)}
+        {nombreStorage ? <Text>Hola: {nombreStorage}</Text> : null}
+        <TextInput
+          placeholder="Escribe tu nombre"
+          style={styles.input}
+          onChangeText={(text) => setNombre(text)}
         />
-        <Button 
-        title="Guardar" 
-        color="#333"
-        onPress={() => guardarDatos()}
-         />
-        <TouchableHighlight style={styles.btnEliminar}>
-          <Text style={styles.textoEliminar}>Eliminar Nombre &times;</Text>
-        </TouchableHighlight>
+        <View style={styles.btnGuardar}>
+          <Button title="Guardar" color="#333" onPress={() => guardarDatos()} />
+        </View>
+        {nombreStorage ? (
+          <TouchableHighlight
+            style={styles.btnEliminar}
+            onPress={() => eliminarDatos()}>
+            <Text style={styles.textoEliminar}>Eliminar Nombre &times;</Text>
+          </TouchableHighlight>
+        ) : null}
       </View>
     </>
   );
@@ -72,6 +83,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: 300,
     height: 40,
+  },
+  btnGuardar: {
+    marginTop: Platform.OS === 'ios' ? 0 : 20,
   },
   btnEliminar: {
     backgroundColor: 'red',
