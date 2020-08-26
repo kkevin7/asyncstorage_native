@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,19 +10,32 @@ import {
   Button,
   TouchableHighlight,
 } from 'react-native';
+import AsyncStorage from "@react-native-community/async-storage";
 
 const App = () => {
+  const [nombre, setNombre] = useState('');
+
+  const guardarDatos = async () => {
+    try {
+      await AsyncStorage.setItem('nombre', nombre);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <View style={styles.contenedor}>
         <TextInput 
-        placeholder="Escribe tu nombre"
-          style={styles.input}
+        placeholder="Escribe tu nombre" 
+        style={styles.input} 
+        onChangeText={text => setNombre(text)}
         />
         <Button 
-          title="Guardar"
-          color="#333"
-        />
+        title="Guardar" 
+        color="#333"
+        onPress={() => guardarDatos()}
+         />
         <TouchableHighlight style={styles.btnEliminar}>
           <Text style={styles.textoEliminar}>Eliminar Nombre &times;</Text>
         </TouchableHighlight>
@@ -55,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textTransform: 'uppercase',
     width: 300,
-  }
+  },
 });
 
 export default App;
